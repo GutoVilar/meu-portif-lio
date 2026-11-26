@@ -12,10 +12,94 @@
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- Devicon (logos das tecnologias) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/devicon/2.16.0/devicon.min.css">
+
     <title>Gustavo Vilar | Portfólio</title>
     <link rel="stylesheet" href="style.css">
+    
+    <script>if (localStorage.getItem("theme") === "light") document.documentElement.classList.add("light");</script>
 </head>
 <body>
+
+    <!-- INTRO: terminal de inicialização (aparece 1x por sessão; clique ou tecle para pular) -->
+    <div class="intro" id="intro" role="status" aria-label="Carregando portfólio">
+        <div class="intro-term">
+            <div class="intro-bar"><span></span><span></span><span></span><em>gustavo@portfolio: ~</em></div>
+            <div class="intro-log" id="intro-log"></div>
+            <div class="intro-prog"><div id="intro-fill"></div></div>
+        </div>
+        <button class="intro-skip" id="intro-skip" type="button">pular &rsaquo;</button>
+    </div>
+    <script>
+    (function () {
+        var el = document.getElementById("intro");
+        if (!el) return;
+        var reduz = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+        var visto = false;
+        try { visto = sessionStorage.getItem("intro-vista") === "1"; } catch (e) {}
+        if (reduz || visto) { el.remove(); return; }
+
+        var root = document.documentElement, fim = false;
+        root.classList.add("intro-ativa");
+        var log = document.getElementById("intro-log"), fill = document.getElementById("intro-fill");
+        var espera = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
+
+        function encerrar() {
+            if (fim) return; fim = true;
+            try { sessionStorage.setItem("intro-vista", "1"); } catch (e) {}
+            el.classList.add("saindo");
+            root.classList.remove("intro-ativa");
+            window.dispatchEvent(new Event("intro-fim"));
+            setTimeout(function () { el.remove(); }, 800);
+        }
+        el.addEventListener("click", encerrar);
+        window.addEventListener("keydown", function () { encerrar(); }, { once: true });
+        setTimeout(encerrar, 9000); // segurança
+
+        // Edite aqui as linhas do "terminal"
+        var passos = ["carregando skills", "compilando projetos", "montando certificados", "conectando galáxia"];
+
+        async function linha(texto, cls) {
+            var d = document.createElement("div"); d.className = cls || "";
+            log.appendChild(d);
+            for (var i = 0; i < texto.length; i++) { if (fim) return d; d.textContent += texto[i]; await espera(28); }
+            return d;
+        }
+
+        (async function rodar() {
+            await espera(250);
+            await linha("$ npm run portfolio", "cmd");
+            await espera(250);
+            if (fim) return;
+            var d = document.createElement("div"); d.className = "dim"; d.textContent = "> gustavo-vilar@1.0.0 start"; log.appendChild(d);
+            await espera(350);
+            for (var n = 0; n < passos.length; n++) {
+                if (fim) return;
+                var l = await linha("\u2714 " + passos[n] + " ", "ok");
+                var pts = document.createElement("span"); pts.className = "dim"; l.appendChild(pts);
+                for (var k = 0; k < 8; k++) { pts.textContent += "."; await espera(40); }
+                var okk = document.createElement("b"); okk.textContent = " ok"; l.appendChild(okk);
+                fill.style.width = ((n + 1) / passos.length * 100) + "%";
+                await espera(120);
+            }
+            if (fim) return;
+            await espera(200);
+            var h = document.createElement("div"); h.className = "hello";
+            h.innerHTML = "&lt;Olá, mundo! /&gt;<span class=\"caret\"></span>";
+            log.appendChild(h);
+            await espera(1100);
+            encerrar();
+        })();
+    })();
+    </script>
+
+
+    <!-- FUNDO DE GALÁXIA INTERATIVO -->
+    <div class="galaxia" aria-hidden="true">
+        <div class="galaxia-nebula"></div>
+        <canvas id="galaxia-canvas"></canvas>
+    </div>
 
     <!-- CABEÇALHO -->
     <header>
@@ -29,16 +113,27 @@
             <nav class="menu-desktop">
                 <ul>
                     <li><a href="#inicio">Início</a></li>
-                    <li><a href="#especialidades">Especialidades</a></li>
                     <li><a href="#sobre">Sobre</a></li>
+                    <li><a href="#especialidades">Habilidades</a></li>
+                    <li><a href="#experiencias">Experiências</a></li>
                     <li><a href="#projetos">Projetos</a></li>
+                    <li><a href="#certificados">Certificados</a></li>
                 </ul>
             </nav>
 
-            <div class="btn-contato">
-                <a href="#contato">
-                    <button>Contato</button>
-                </a>
+            <div class="header-actions">
+                <button type="button" id="theme-toggle" class="theme-toggle" aria-label="Alternar tema claro/escuro" title="Alternar tema" aria-pressed="false">
+    <span class="tt-sky" aria-hidden="true"><i class="cloud c1"></i><i class="cloud c2"></i><i class="cloud c3"></i></span>
+    <span class="tt-night" aria-hidden="true"><i class="star s1"></i><i class="star s2"></i><i class="star s3"></i><i class="star s4"></i><i class="star s5"></i><i class="star s6"></i></span>
+    <span class="tt-knob" aria-hidden="true">
+        <i class="tt-sun-disc"></i><i class="tt-moon-disc"></i>
+        <svg class="tt-ic tt-ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        <svg class="tt-ic tt-ic-moon" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 14.6A8.5 8.5 0 0 1 9.4 3.5a.6.6 0 0 0-.8-.7A10 10 0 1 0 21.2 15.4a.6.6 0 0 0-.7-.8z"/></svg>
+    </span>
+</button>
+                <div class="btn-contato">
+                    <a href="#contato"><button>Contato</button></a>
+                </div>
             </div>
         </div>
     </header>
@@ -53,7 +148,7 @@
                         <h1>Olá, eu sou o <span>Gustavo Vilar</span></h1>
                         <h2>Eu sou <span class="typewriter"></span><span class="cursor">&nbsp;</span></h2>
                         
-                        <p>Estudante de <strong>Análise e Desenvolvimento de Sistemas (ADS)</strong> com foco em desenvolvimento Front-end (HTML5, CSS3, JavaScript Avançado, Bootstrap, React.js, TypeScript e Tailwind). Atualmente expandindo meus conhecimentos em <strong>Java, Python e desenvolvimento Back-end</strong>.</p>
+                       <p>Estudante de <strong>Análise e Desenvolvimento de Sistemas (ADS)</strong> com foco principal em <strong>desenvolvimento Back-end</strong>, aprofundando meus estudos em <strong>Java e Banco de Dados</strong>. Também construo interfaces web modernas e responsivas no <strong>Front-end</strong>, unindo lógica sólida e boa experiência do usuário.</p>
                         
                         <div class="btn-group">
                             <a href="#contato" class="btn-primario">Fale Comigo</a>
@@ -63,7 +158,7 @@
                         <div class="redes-sociais">
                             <a href="https://github.com" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
                             <a href="https://linkedin.com" target="_blank" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-                            <a href="https://wa.me/" target="_blank" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+                            <a href="https://wa.me/5521967576556?text=Ol%C3%A1%2C%20Gustavo!%20Vi%20seu%20portf%C3%B3lio%20e%20gostaria%20de%20conversar%20sobre%20uma%20oportunidade." target="_blank" rel="noopener" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
                         </div>
                     </div>
 
@@ -75,91 +170,20 @@
             </div>
         </section>
 
-        <!-- ESPECIALIDADES -->
+        <!-- SKILLS & FERRAMENTAS -->
         <section class="especialidades" id="especialidades">
+            <i class="fa-brands fa-react skills-bg" aria-hidden="true"></i>
             <div class="interface">
-                <h2 class="titulo">MINHAS <span>ESPECIALIDADES.</span></h2>
-                <p class="subtitulo">Tecnologias Front-end que utilizo e linguagens que fazem parte do meu plano de estudos Back-end.</p>
-
-                <div class="flex">
-                    <!-- HTML5 -->
-                    <div class="especialidades-box">
-                        <i class="fa-brands fa-html5"></i>
-                        <h3>HTML5</h3>
-                        <span class="tag tag-front">Avançado</span>
-                        <p>Estruturação semântica de páginas web, focando em acessibilidade, SEO e boas práticas.</p>
-                    </div>
-
-                    <!-- CSS3 -->
-                    <div class="especialidades-box">
-                        <i class="fa-brands fa-css3-alt"></i>
-                        <h3>CSS3</h3>
-                        <span class="tag tag-front">Avançado</span>
-                        <p>Estilização moderna com Flexbox, Grid Layout, animações e layouts totalmente responsivos.</p>
-                    </div>
-
-                    <!-- JavaScript -->
-                    <div class="especialidades-box">
-                        <i class="fa-brands fa-js"></i>
-                        <h3>JavaScript</h3>
-                        <span class="tag tag-front">Avançado</span>
-                        <p>Criação de interatividade, manipulação avançada de DOM, requisições de APIs e lógica de programação.</p>
-                    </div>
-
-                    <!-- Bootstrap -->
-                    <div class="especialidades-box">
-                        <i class="fa-brands fa-bootstrap"></i>
-                        <h3>Bootstrap</h3>
-                        <span class="tag tag-front">Intermediário</span>
-                        <p>Desenvolvimento ágil de interfaces responsivas utilizando o sistema de grid e componentes prontos.</p>
-                    </div>
-
-                    <!-- React.js -->
-                    <div class="especialidades-box">
-                        <i class="fa-brands fa-react"></i>
-                        <h3>React.js</h3>
-                        <span class="tag tag-front">Intermediário</span>
-                        <p>Criação de aplicações web reativas com componentes reutilizáveis, props e gestão de estado.</p>
-                    </div>
-
-                    <!-- TypeScript -->
-                    <div class="especialidades-box">
-                        <i class="fa-solid fa-code"></i>
-                        <h3>TypeScript</h3>
-                        <span class="tag tag-front">Intermediário</span>
-                        <p>Adicionando tipagem estática ao JavaScript para maior segurança, escalabilidade e produtividade nos códigos.</p>
-                    </div>
-
-                    <!-- Tailwind CSS -->
-                    <div class="especialidades-box">
-                        <i class="fa-solid fa-wind"></i>
-                        <h3>Tailwind CSS</h3>
-                        <span class="tag tag-front">Intermediário</span>
-                        <p>Estilização rápida e customizável utilizando classes utilitárias direto no código para layouts modernos.</p>
-                    </div>
-
-                    <!-- Java -->
-                    <div class="especialidades-box">
-                        <i class="fa-brands fa-java"></i>
-                        <h3>Java</h3>
-                        <span class="tag tag-futuro">Em Estudo</span>
-                        <p>Aprofundamento em Programação Orientada a Objetos (POO) e desenvolvimento de APIs robustas.</p>
-                    </div>
-
-                    <!-- Python -->
-                    <div class="especialidades-box">
-                        <i class="fa-brands fa-python"></i>
-                        <h3>Python</h3>
-                        <span class="tag tag-futuro">Em Estudo</span>
-                        <p>Estudo focado em sintaxe ágil, automação de tarefas e lógica de programação Back-end.</p>
-                    </div>
-
-                    <!-- Back-end -->
-                    <div class="especialidades-box">
-                        <i class="fa-solid fa-server"></i>
-                        <h3>Back-end</h3>
-                        <span class="tag tag-futuro">Em Estudo</span>
-                        <p>Desenvolvimento em bancos de dados, APIs RESTful, autenticação e lógica de servidor.</p>
+                <div class="sec-tag-wrap"><span class="sec-tag"><b>&lt;/&gt;</b> Tecnologias</span></div>
+                <h2 class="titulo">SKILLS & <span>FERRAMENTAS.</span></h2>
+                <p class="subtitulo">Tecnologias que utilizo para criar aplicações web. Ícones tracejados são o que estou estudando.</p>
+                <div class="skills-grid" id="skills-grid"></div>
+                <div class="marquee" aria-hidden="true"><div class="marquee-track" id="marquee-track"></div></div>
+                <div class="orbit-wrap">
+                    <h3>Tecnologias & Redes</h3>
+                    <div class="orbit">
+                        <div class="orbit-core"><i class="fa-solid fa-earth-americas"></i></div>
+                        <div class="orbit-ring" id="orbit-ring"></div>
                     </div>
                 </div>
             </div>
@@ -175,9 +199,37 @@
 
                     <div class="txt-sobre">
                         <h2>MUITO PRAZER, <span>SOU GUSTAVO VILAR.</span></h2>
-                        <p>Atualmente estou cursando <strong>Análise e Desenvolvimento de Sistemas (ADS)</strong> e construindo uma base sólida em engenharia e desenvolvimento de software.</p>
-                        <p>Possuo nível <strong>avançado em HTML5, CSS3 e JavaScript</strong>, além de experiência <strong>intermediária em Bootstrap, React.js, TypeScript e Tailwind CSS</strong>. Paralelamente, estou dedicado ao estudo contínuo do ecossistema <strong>Back-end com Java e Python</strong> para me tornar um desenvolvedor Full Stack completo.</p>
-                        <p>Busco minha oportunidade na área (como Estágio em Desenvolvimento de Software) para aplicar meu raciocínio lógico, capacidade de organização e vontade constante de evoluir.</p>
+                        <p>Estudante de <strong>Análise e Desenvolvimento de Sistemas (ADS)</strong>, direciono minha carreira com foco principal no <strong>desenvolvimento Back-end</strong>, aprofundando diariamente meus estudos em <strong>Java e Banco de Dados</strong> para construir sistemas seguros, organizados e escaláveis.</p>
+<p>Além disso, tenho experiência prática no <strong>Front-end</strong>, desenvolvendo aplicações web responsivas e interativas — o que me dá uma visão completa de como o sistema funciona de ponta a ponta.</p>
+<p>Busco uma oportunidade de <strong>Estágio em Desenvolvimento de Software</strong> para aplicar minha lógica de programação, vontade de aprender e dedicação em projetos reais junto à equipe.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- EXPERIÊNCIAS -->
+        <section class="experiencias" id="experiencias">
+            <div class="interface">
+                <h2 class="titulo">EXPERIÊNCIAS <span>PROFISSIONAIS.</span></h2>
+                <p class="subtitulo">Minha trajetória profissional está começando — e o caminho já está sendo construído.</p>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="exp-card">
+                            <div class="exp-head">
+                                <h3>Em busca do primeiro estágio</h3>
+                                <span class="exp-badge"><i class="fa-solid fa-person-digging"></i> Em construção</span>
+                            </div>
+                            <div class="exp-company"><i class="fa-solid fa-briefcase"></i> Construindo experiências</div>
+                            <ul>
+                                <li>Desenvolvendo projetos reais para consolidar o Front-end.</li>
+                                <li>Estudando Java, Python e Back-end para me tornar Full Stack.</li>
+                                <li>Aberto a oportunidades de estágio em desenvolvimento de software.</li>
+                            </ul>
+                            <div class="exp-progress"><span></span></div>
+                            <small class="exp-note">Próximas experiências carregando...</small>
+                        </div>
+                        <span class="timeline-dot"></span>
+                        <div class="timeline-date"><i class="fa-regular fa-calendar"></i> 2026 – Atual <span class="badge-atual">ATUAL</span></div>
                     </div>
                 </div>
             </div>
@@ -190,122 +242,243 @@
                 <p class="subtitulo">Aplicações práticas desenvolvidas e planejadas durante meus estudos.</p>
 
                 <div class="flex">
+
+                    <!-- Projeto: By Sport Jacarepaguá — Tabela & Calendário -->
+<div class="projeto-card">
+    <div class="img-proj">
+    <img src="img/Captura de tela 2026-11-26 010730.png" alt="By Sport Jacarepaguá" style="width:100%; height:100%; object-fit:cover; border-radius: 8px 8px 0 0;">
+</div>
+    <h3>By Sport Jacarepaguá — Tabela & Calendário</h3>
+    <p>Sistema web full stack para gerenciar campeonatos: tabela de classificação, jogos, finais e campeões por temporada e categoria, além de calendário de eventos, login com perfis de usuário e moderador e API REST.</p>
+    <div class="proj-tags">
+        <span class="proj-tag"><i class="devicon-java-plain colored"></i> Java</span>
+        <span class="proj-tag"><i class="devicon-spring-plain colored"></i> Spring</span>
+        <span class="proj-tag"><i class="devicon-postgresql-plain colored"></i> PostgreSQL</span>
+        <span class="proj-tag"><i class="devicon-docker-plain colored"></i> Docker</span>
+        <span class="proj-tag"><i class="devicon-javascript-plain colored"></i> JavaScript</span>
+        <span class="proj-tag"><i class="devicon-html5-plain colored"></i> HTML5</span>
+        <span class="proj-tag"><i class="devicon-css3-plain colored"></i> CSS3</span>
+    </div>
+    <div class="proj-actions">
+        <!-- TROQUE os dois links abaixo pelos seus -->
+        <a href="https://calendario-bysport.onrender.com/" target="_blank" rel="noopener" class="proj-btn">Acessar Sistema <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+        <a href="https://github.com/GutoVilar/HTML-GUTO" target="_blank" rel="noopener" class="proj-btn proj-btn--code" aria-label="Ver código no GitHub" title="Ver código no GitHub"><i class="fa-brands fa-github"></i></a>
+    </div>
+</div>
+
                     <!-- Projeto 1: Vilar Store -->
-                    <div class="projeto-card">
-                        <div class="img-proj">
-                            <img src="img/Captura de tela 2026-10-25 022130.png" alt="Vilar Store E-commerce" style="width:100%; height:100%; object-fit:cover; border-radius: 8px 8px 0 0;">
-                        </div>
-                        <h3>Vilar Store — E-commerce</h3>
-                        <p>Aplicação web interativa com catálogo de produtos, filtros por categoria/preço, busca em tempo real, carrinho de compras e alternância de tema.</p>
-                        <div style="display: flex; gap: 10px; margin-top: 15px;">
-                            <a href="https://github.com/GutoVilar/VilarTech" target="_blank" class="btn-proj">Repositório <i class="fa-brands fa-github"></i></a>
-                            <a href="https://gutovilar.github.io/VilarTech/" target="_blank" class="btn-proj">Projeto ao Vivo <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-                        </div>
-                    </div>
+<div class="projeto-card">
+    <div class="img-proj">
+        <img src="img/Captura de tela 2026-10-25 022130.png" alt="Vilar Store E-commerce" style="width:100%; height:100%; object-fit:cover; border-radius: 8px 8px 0 0;">
+    </div>
+    <h3>Vilar Store — E-commerce</h3>
+    <p>Aplicação web interativa com catálogo de produtos, filtros por categoria/preço, busca em tempo real, carrinho de compras e alternância de tema.</p>
+    <div class="proj-tags">
+    <span class="proj-tag"><i class="devicon-java-plain colored"></i> Java</span>
+    <span class="proj-tag"><i class="devicon-spring-plain colored"></i> Spring</span>
+    <span class="proj-tag"><i class="devicon-postgresql-plain colored"></i> PostgreSQL</span>
+    <span class="proj-tag"><i class="devicon-docker-plain colored"></i> Docker</span>
+    <span class="proj-tag"><i class="devicon-tailwindcss-original colored"></i> Tailwind</span>
+    <span class="proj-tag"><i class="devicon-javascript-plain colored"></i> JavaScript</span>
+</div>
+<div class="proj-actions">
+    <a href="em-construcao.html" class="proj-btn proj-btn--wip">Em Desenvolvimento <i class="fa-solid fa-arrow-right"></i></a>
+</div>
+</div>
 
-                    <!-- Projeto 2: Vilar Finance -->
-                    <div class="projeto-card">
-                        <div class="img-proj">
-                            <img src="img/Captura de tela 2026-10-25 024414.png" alt="Vilar Finance" style="width:100%; height:100%; object-fit:cover; border-radius: 8px 8px 0 0;">
-                        </div>
-                        <h3>Vilar Finance — Controle Financeiro</h3>
-                        <p>Aplicação web para gestão de finanças pessoais com cadastro de entradas e saídas, cálculo dinâmico de saldo e resumo de transações.</p>
-                        <div style="display: flex; gap: 10px; margin-top: 15px;">
-                            <a href="https://github.com/GutoVilar/Vilar-Finance" target="_blank" class="btn-proj">Repositório <i class="fa-brands fa-github"></i></a>
-                            <a href="https://gutovilar.github.io/Vilar-Finance/" target="_blank" class="btn-proj">Projeto ao Vivo <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-                        </div>
-                    </div>
+<!-- Projeto 2: Vilar Finance -->
+<div class="projeto-card">
+    <div class="img-proj">
+        <img src="img/Captura de tela 2026-10-25 024414.png" alt="Vilar Finance" style="width:100%; height:100%; object-fit:cover; border-radius: 8px 8px 0 0;">
+    </div>
+    <h3>Vilar Finance — Controle Financeiro</h3>
+    <p>Aplicação web para gestão de finanças pessoais com cadastro de entradas e saídas, cálculo dinâmico de saldo e resumo de transações.</p>
+    <div class="proj-tags">
+        <span class="proj-tag"><i class="devicon-html5-plain colored"></i> HTML5</span>
+        <span class="proj-tag"><i class="devicon-css3-plain colored"></i> CSS3</span>
+        <span class="proj-tag"><i class="devicon-javascript-plain colored"></i> JavaScript</span>
+    </div>
+    <div class="proj-actions">
+        <a href="https://gutovilar.github.io/Vilar-Finance/" target="_blank" rel="noopener" class="proj-btn">Acessar Projeto <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+        <a href="https://github.com/GutoVilar/Vilar-Finance" target="_blank" rel="noopener" class="proj-btn proj-btn--code" aria-label="Ver código no GitHub" title="Ver código no GitHub"><i class="fa-brands fa-github"></i></a>
+    </div>
+</div>
 
-                    <!-- Projeto 3: Lista de Tarefas -->
-                    <div class="projeto-card">
-                        <div class="img-proj">
-                            <img src="img/Captura de tela 2026-10-25 023825.png" alt="Lista de Tarefas" style="width:100%; height:100%; object-fit:cover; border-radius: 8px 8px 0 0;">
-                        </div>
-                        <h3>Lista de Tarefas (To-Do List)</h3>
-                        <p>Gerenciador de tarefas interativo para organização diária com adição, marcação de concluído e persistência de dados via LocalStorage.</p>
-                        <div style="display: flex; gap: 10px; margin-top: 15px;">
-                            <a href="https://github.com/GutoVilar/Lista-de-tarefas" target="_blank" class="btn-proj">Repositório <i class="fa-brands fa-github"></i></a>
-                            <a href="https://gutovilar.github.io/Lista-de-tarefas/" target="_blank" class="btn-proj">Projeto ao Vivo <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-                        </div>
-                    </div>
+<!-- Projeto 3: Lista de Tarefas -->
+<div class="projeto-card">
+    <div class="img-proj">
+        <img src="img/Captura de tela 2026-10-25 023825.png" alt="Lista de Tarefas" style="width:100%; height:100%; object-fit:cover; border-radius: 8px 8px 0 0;">
+    </div>
+    <h3>Lista de Tarefas (To-Do List)</h3>
+    <p>Gerenciador de tarefas interativo para organização diária com adição, marcação de concluído e persistência de dados via LocalStorage.</p>
+    <div class="proj-tags">
+        <span class="proj-tag"><i class="devicon-html5-plain colored"></i> HTML5</span>
+        <span class="proj-tag"><i class="devicon-css3-plain colored"></i> CSS3</span>
+        <span class="proj-tag"><i class="devicon-javascript-plain colored"></i> JavaScript</span>
+    </div>
+    <div class="proj-actions">
+        <a href="https://gutovilar.github.io/Lista-de-tarefas/" target="_blank" rel="noopener" class="proj-btn">Acessar Projeto <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+        <a href="https://github.com/GutoVilar/Lista-de-tarefas" target="_blank" rel="noopener" class="proj-btn proj-btn--code" aria-label="Ver código no GitHub" title="Ver código no GitHub"><i class="fa-brands fa-github"></i></a>
+    </div>
+</div>
 
-                    <!-- Projeto 4: Vilar Schedule -->
-                    <div class="projeto-card">
-                        <div class="img-proj">
-                            <img src="img/Captura de tela 2026-10-25 023821.png" alt="Vilar Schedule" style="width:100%; height:100%; object-fit:cover; border-radius: 8px 8px 0 0;">
-                        </div>
-                        <h3>Vilar Schedule — Agendamento</h3>
-                        <p>Sistema web de agendamento e organização de horários, focado em facilidade de uso, controle de eventos e interface intuitiva.</p>
-                        <div style="display: flex; gap: 10px; margin-top: 15px;">
-                            <a href="https://github.com/GutoVilar/Vilar-Schedule" target="_blank" class="btn-proj">Repositório <i class="fa-brands fa-github"></i></a>
-                            <a href="https://gutovilar.github.io/Vilar-Schedule/" target="_blank" class="btn-proj">Projeto ao Vivo <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-                        </div>
-                    </div>
+<!-- Projeto 4: Vilar Schedule -->
+<div class="projeto-card">
+    <div class="img-proj">
+        <img src="img/Captura de tela 2026-10-25 023821.png" alt="Vilar Schedule" style="width:100%; height:100%; object-fit:cover; border-radius: 8px 8px 0 0;">
+    </div>
+    <h3>Vilar Schedule — Agendamento</h3>
+    <p>Sistema web de agendamento e organização de horários, focado em facilidade de uso, controle de eventos e interface intuitiva.</p>
+    <div class="proj-tags">
+        <span class="proj-tag"><i class="devicon-html5-plain colored"></i> HTML5</span>
+        <span class="proj-tag"><i class="devicon-css3-plain colored"></i> CSS3</span>
+        <span class="proj-tag"><i class="devicon-javascript-plain colored"></i> JavaScript</span>
+    </div>
+    <div class="proj-actions">
+        <a href="https://gutovilar.github.io/Vilar-Schedule/" target="_blank" rel="noopener" class="proj-btn">Acessar Projeto <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+        <a href="https://github.com/GutoVilar/Vilar-Schedule" target="_blank" rel="noopener" class="proj-btn proj-btn--code" aria-label="Ver código no GitHub" title="Ver código no GitHub"><i class="fa-brands fa-github"></i></a>
+    </div>
+</div>
 
-                    <!-- Projeto 5: Futuro Projeto Back-end -->
-                    <div class="projeto-card">
-                        <div class="img-proj placeholder">
-                            <i class="fa-solid fa-gears"></i>
-                        </div>
-                        <h3>Futuro Projeto Back-end</h3>
-                        <p>Projeto planejado para aplicar conceitos de Java/Python, consumo de APIs e integração com banco de dados.</p>
-                        <a href="#" class="btn-proj">Em breve</a>
-                    </div>
-                </div>
-            </div>
+<!-- Projeto 5: Futuro Projeto Back-end (em desenvolvimento) -->
+<div class="projeto-card">
+    <div class="img-proj placeholder">
+        <i class="fa-solid fa-gears"></i>
+    </div>
+    <h3>Futuro Projeto Back-end</h3>
+    <p>Projeto planejado para aplicar conceitos de Java, consumo de APIs e integração com banco de dados.</p>
+    <div class="proj-tags">
+        <span class="proj-tag"><i class="devicon-java-plain colored"></i> Java</span>
+        <span class="proj-tag"><i class="devicon-spring-plain colored"></i> Spring</span>
+        <span class="proj-tag"><i class="devicon-postgresql-plain colored"></i> PostgreSQL</span>
+    </div>
+    <div class="proj-actions">
+        <a href="em-construcao.html" class="proj-btn proj-btn--wip">Em Desenvolvimento <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+</div>
         </section>
 
-        <!-- CONTATO -->
-        <section class="contato" id="contato">
-            <div class="interface">
-                <h2 class="titulo">ENTRE EM <span>CONTATO.</span></h2>
-                <p class="subtitulo">Tem uma oportunidade de estágio ou quer conversar sobre tecnologia? Mande uma mensagem!</p>
+       <!-- CERTIFICADOS -->
+<section class="certificados" id="certificados">
+    <div class="interface">
+        <h2 class="titulo">CERTIFICADOS E <span>CONQUISTAS.</span></h2>
+        <p class="subtitulo">Cursos e formações que complementam meus estudos.</p>
+        <div class="cert-grid">
+            <!-- Firjan SENAI -->
+            <div class="cert-card">
+                <div class="cert-head"><img class="cert-logo-img cert-logo-escuro" src="img/logo-totvs.png" alt="Firjan SENAI SESI"><span class="cert-count">2 cursos</span></div>
+                <ul>
+                    <li class="cert-item"><i class="cert-ic devicon-python-plain colored"></i><div><strong>Desenvolvedor Back-End</strong><small>Python · 300h</small></div></li>
+                    <li class="cert-item"><i class="cert-ic devicon-java-plain colored"></i><div><strong>Desenvolvedor Back-End</strong><small>Java · 300h</small></div></li>
+                </ul>
+                <p class="cert-note"><i class="fa-solid fa-circle-check"></i> Certificados de conclusão · 600h no total</p>
+            </div>
+            <!-- Fundação Bradesco -->
+            <div class="cert-card">
+                <div class="cert-head"><img class="cert-logo-img cert-logo-grande" src="img/fundacao_logo-topo.png" alt="Fundação Bradesco"><span class="cert-count">6 cursos</span></div>
+                <ul>
+                    <li class="cert-item"><i class="cert-ic fa-solid fa-file-excel" style="--c:#21a366"></i><span>Excel Avançado</span><em class="cert-horas">30h</em></li>
+                    <li class="cert-item"><i class="cert-ic fa-solid fa-chart-column" style="--c:#f2c811"></i><span>Power BI Avançado</span><em class="cert-horas">30h</em></li>
+                    <li class="cert-item"><i class="cert-ic fa-solid fa-file-word" style="--c:#2b7cd3"></i><span>Word Avançado</span><em class="cert-horas">30h</em></li>
+                    <li class="cert-item"><i class="cert-ic devicon-csharp-plain colored"></i><span>Linguagem de Programação C#</span><em class="cert-horas">30h</em></li>
+                    <li class="cert-item"><i class="cert-ic fa-solid fa-puzzle-piece" style="--c:#ff8c1a"></i><span>Scratch, suas extensões e computação física</span><em class="cert-horas">30h</em></li>
+                    <li class="cert-item"><i class="cert-ic fa-solid fa-file-powerpoint" style="--c:#d24726"></i><span>Microsoft PowerPoint 2016</span><em class="cert-horas">30h</em></li>
+                </ul>
+                <p class="cert-note"><i class="fa-solid fa-circle-check"></i> Certificados de conclusão · 180h no total</p>
+            </div>
+            <!-- Cursa -->
+            <div class="cert-card">
+                <div class="cert-head"><img class="cert-logo-img" src="img/logo-cursa.png" alt="Cursa" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'cert-logo',textContent:'Cursa'}))"><span class="cert-count">1 curso</span></div>
+                <ul>
+                    <li class="cert-item"><i class="cert-ic devicon-html5-plain colored"></i><div><strong>Front-End</strong><small>HTML · CSS · JavaScript</small></div><em class="cert-horas">23h</em></li>
+                </ul>
+                <p class="cert-note"><i class="fa-solid fa-circle-check"></i> Certificado de conclusão · 23h no total</p>
+            </div>
+        </div>
+    </div>
+</section>
 
-                <div class="flex">
-                    <div class="info-contato">
-                        <div class="box-info">
-                            <i class="fa-solid fa-envelope"></i>
-                            <div>
-                                <h4>E-mail</h4>
-                                <p>gustavosiqueira884@gmail.com</p>
-                            </div>
-                        </div>
-                        <div class="box-info">
-                            <i class="fa-solid fa-location-dot"></i>
-                            <div>
-                                <h4>Localização</h4>
-                                <p>Rio de Janeiro - RJ</p>
-                            </div>
-                        </div>
-                        <div class="box-info">
-                            <i class="fa-solid fa-graduation-cap"></i>
-                            <div>
-                                <h4>Formação</h4>
-                                <p>Análise e Desenvolvimento de Sistemas (ADS)</p>
-                            </div>
-                        </div>
-                    </div>
+       <!-- CONTATO -->
+<section class="contato" id="contato">
+    <div class="interface">
+        <h2 class="titulo">ENTRE EM <span>CONTATO.</span></h2>
+        <p class="subtitulo">Tem uma oportunidade de estágio ou quer conversar sobre tecnologia? Envie uma mensagem ou me encontre nas redes abaixo.</p>
 
-                    <form class="form-contato" onsubmit="event.preventDefault(); alert('Mensagem enviada com sucesso!');">
-                        <input type="text" placeholder="Seu Nome" required>
-                        <input type="email" placeholder="Seu E-mail" required>
-                        <textarea placeholder="Sua Mensagem" rows="5" required></textarea>
-                        <button type="submit" class="btn-primario">Enviar Mensagem</button>
-                    </form>
+        <div class="flex">
+            <div class="info-contato">
+                <h3 class="contato-titulo">Informações de Contato:</h3>
+                <a class="box-info" href="mailto:gustavosiqueira884@gmail.com">
+                    <i class="fa-solid fa-envelope"></i>
+                    <div><h4>E-mail</h4><small>Envie um e-mail diretamente</small><p>gustavosiqueira884@gmail.com</p></div>
+                    <i class="fa-solid fa-arrow-right seta"></i>
+                </a>
+                <a class="box-info" href="https://linkedin.com" target="_blank">
+                    <i class="fa-brands fa-linkedin-in"></i>
+                    <div><h4>LinkedIn</h4><small>Conecte-se profissionalmente</small><p>linkedin.com/in/seu-perfil</p></div>
+                    <i class="fa-solid fa-arrow-up-right-from-square seta"></i>
+                </a>
+                <a class="box-info" href="https://wa.me/5521967576556?text=Ol%C3%A1%2C%20Gustavo!%20Vi%20seu%20portf%C3%B3lio%20e%20gostaria%20de%20conversar%20sobre%20uma%20oportunidade." target="_blank" rel="noopener">
+    <i class="fa-brands fa-whatsapp"></i>
+    <div><h4>WhatsApp</h4><small>Mande uma mensagem direta</small><p>+55 (21) 9 6757-6556</p></div>
+    <i class="fa-solid fa-arrow-up-right-from-square seta"></i>
+</a>
+                <a class="box-info" href="https://github.com" target="_blank">
+                    <i class="fa-brands fa-github"></i>
+                    <div><h4>GitHub</h4><small>Confira meus repositórios</small><p>github.com/GutoVilar</p></div>
+                    <i class="fa-solid fa-arrow-up-right-from-square seta"></i>
+                </a>
+                <div class="box-info">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <div><h4>Localização</h4><small>Disponível para estágio</small><p>Rio de Janeiro - RJ</p></div>
                 </div>
             </div>
-        </section>
+
+            <form class="form-contato" onsubmit="event.preventDefault(); alert('Mensagem enviada com sucesso!');">
+                <h3>Envie uma mensagem</h3>
+                <label>Nome<input type="text" placeholder="Seu nome" required></label>
+                <label>E-mail<input type="email" placeholder="seu@email.com" required></label>
+                <label>Mensagem<textarea placeholder="Conte um pouco sobre o projeto ou a oportunidade..." rows="7" required></textarea></label>
+                <button type="submit" class="btn-primario">Enviar Mensagem <i class="fa-solid fa-paper-plane"></i></button>
+            </form>
+        </div>
+    </div>
+</section>
     </main>
 
     <!-- RODAPÉ -->
     <footer>
         <div class="interface">
-            <div class="flex">
-                <p>&copy; 2026 Gustavo Vilar. Todos os direitos reservados.</p>
-                <div class="redes-sociais">
-                    <a href="https://github.com" target="_blank"><i class="fa-brands fa-github"></i></a>
-                    <a href="https://linkedin.com" target="_blank"><i class="fa-brands fa-linkedin-in"></i></a>
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3 class="footer-nome">Gustavo Vilar <i class="fa-solid fa-code"></i></h3>
+                    <p>Estudante de ADS | Desenvolvedor Front-end | Em transição para Full Stack</p>
+                    <div class="redes-sociais">
+                        <a href="https://linkedin.com" target="_blank" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                        <a href="https://github.com" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                        <a href="https://wa.me/5521967576556?text=Ol%C3%A1%2C%20Gustavo!%20Vi%20seu%20portf%C3%B3lio%20e%20gostaria%20de%20conversar%20sobre%20uma%20oportunidade." target="_blank" rel="noopener" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+                        <a href="mailto:gustavosiqueira884@gmail.com" title="E-mail"><i class="fa-solid fa-envelope"></i></a>
+                    </div>
                 </div>
+                <div class="footer-col">
+                    <h4>NAVEGAÇÃO</h4>
+                    <div class="footer-links">
+                        <a href="#sobre"><i class="fa-regular fa-user"></i> Sobre mim</a>
+                        <a href="#especialidades"><i class="fa-solid fa-code"></i> Habilidades</a>
+                        <a href="#experiencias"><i class="fa-solid fa-briefcase"></i> Experiências</a>
+                        <a href="#projetos"><i class="fa-regular fa-folder"></i> Projetos</a>
+                        <a href="#certificados"><i class="fa-solid fa-award"></i> Certificados</a>
+                        <a href="#contato"><i class="fa-regular fa-envelope"></i> Contato</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>VAMOS CONVERSAR?</h4>
+                    <p>Tem um projeto ou uma oportunidade em mente? Me mande uma mensagem.</p>
+                    <a href="#contato" class="btn-primario">Entrar em contato <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Gustavo Vilar. Todos os direitos reservados.</p>
+                <a href="#inicio" class="voltar-topo"><i class="fa-solid fa-chevron-up"></i> Voltar ao topo</a>
             </div>
         </div>
     </footer>
@@ -352,5 +525,7 @@
 
         typingEffect();
     </script>
+    <script src="script.js"></script>
+    
 </body>
 </html>
