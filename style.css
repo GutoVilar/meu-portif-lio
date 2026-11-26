@@ -1539,3 +1539,16 @@ html.intro-ativa { overflow: hidden; }
 .reveal.dir { translate: 44px 0; }
 .reveal.visivel { opacity: 1; translate: 0 0; }
 @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; translate: none; transition: none; } }
+/* ===== Marca: dragão (sem fundo) + nome ao lado ===== */
+header .logo a.marca { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+header .logo img { width: auto; height: 52px; border: 0; border-radius: 0; box-shadow: none; background: none; padding: 0; object-fit: contain; filter: drop-shadow(0 0 7px rgba(100, 255, 218, 0.45)); }
+html.light header .logo img { border: 0; box-shadow: none; filter: drop-shadow(0 2px 5px rgba(29, 78, 216, 0.3)); }
+.marca-nome { font-size: 21px; font-weight: 700; letter-spacing: 0; color: #fff; white-space: nowrap; }
+.marca-nome b { font-weight: inherit; color: inherit; }
+html.light .marca-nome { color: #0f172a; }
+@media (max-width: 1240px) { header .logo img { height: 46px; } .marca-nome { font-size: 17px; } header .logo a.marca { gap: 9px; } header > .interface { gap: 14px; } }
+@media (max-width: 480px) { header .logo img { height: 38px; } .marca-nome { font-size: 14.5px; letter-spacing: 0; } header .logo a.marca { gap: 7px; } header > .interface { gap: 8px; } }
+
+/* Evita rolagem horizontal causada pelas animações de entrada */
+@media (max-width: 992px) { .reveal.esq, .reveal.dir { translate: 0 36px; } }
+main { overflow-x: clip; }
